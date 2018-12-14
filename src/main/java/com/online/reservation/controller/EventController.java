@@ -1,11 +1,27 @@
 package com.online.reservation.controller;
 
+import com.online.reservation.model.Event;
+import com.online.reservation.service.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/userEvents")
 public class EventController {
+
+    private final EventService eventService;
+
+    @Autowired
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     /**
      * As a reporting user, I can request a list of user events (for all users) that took place within a given timeframe.
@@ -22,11 +38,16 @@ public class EventController {
      * }
      */
 
-    public void addEvent(){
 
+    @RequestMapping
+    public List<Event> getEventsWithinTimeFrame(@RequestParam("t1") Timestamp t1, @RequestParam("t2") Timestamp t2){
+        return eventService.getEventsWithinTimeFrame(t1, t2);
     }
 
-
+    @RequestMapping("/{uuid}")
+    public List<Event> getEventsByUserId(UUID uuid){
+        return eventService.getEventByUserId(uuid);
+    }
 
 
 }
